@@ -19,7 +19,7 @@
 ##' @examples
 ##' dat <- rprobMat(10, c(2,2,2))
 ##' 
-##' @export rprobMat
+##' @export 
 rprobMat = function(n, dim, d, alpha=1) {
   ## if dimension vector shorter than length d, recycle (with warning
   ## if necessary)
@@ -390,5 +390,14 @@ as_tables.array <- function(x, tdim, ...) {
   x
 }
 
+##' Create blank tables
+##' 
+##' @param n number of tables
+##' @param tdim dimension of each table
+##' 
+##' @export
+tables <- function(n, tdim) {
+  as_tables.array(array(1, dim=c(n, tdim)), tdim=tdim)
+}
 
 # as.tables.data.frame <-

@@ -12,27 +12,56 @@
 
 <meta name="author" content="Robin J. Evans" />
 
-<meta name="date" content="2021-01-26" />
+<meta name="date" content="2022-11-13" />
 
 <title>Tables</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -52,7 +81,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -106,6 +135,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
+
 
 
 
@@ -303,123 +333,137 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Tables</h1>
 <h4 class="author">Robin J. Evans</h4>
-<h4 class="date">2021-01-26</h4>
+<h4 class="date">2022-11-13</h4>
 
 
 
-<p>This package contains methods for storing and manipulating collections of contingency tables, and for easily vectorizing functions which apply to a contingency table.</p>
-<p>The basis of this is the class of object <code>tables</code>, which contains a collection of numerical tables all of the same dimension. Let’s create a collection of 10 contingency tables (in this case probability tables), each of dimension 2x2x2.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(contingency)</span></code></pre></div>
+<p>This package contains methods for storing and manipulating
+collections of contingency tables, and for easily vectorizing functions
+which apply to a contingency table.</p>
+<p>The basis of this is the class of object <code>tables</code>, which
+contains a collection of numerical tables all of the same dimension.
+Let’s create a collection of 10 contingency tables (in this case
+probability tables), each of dimension 2x2x2.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(contingency)</span></code></pre></div>
 <pre><code>## Loading required package: rje</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>tab &lt;-<span class="st"> </span><span class="kw">rprobMat</span>(<span class="dv">10</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
-<span id="cb3-2"><a href="#cb3-2"></a>tab</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">rprobMat</span>(<span class="dv">10</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>tab</span></code></pre></div>
 <pre><code>## Group of 10 numeric tables of dimension 2x2x2
 ## First entry:
 ## , , 1
 ## 
 ##            [,1]       [,2]
-## [1,] 0.06882546 0.05337011
-## [2,] 0.01401081 0.01098293
+## [1,] 0.07725706 0.05919536
+## [2,] 0.02177280 0.22951635
 ## 
 ## , , 2
 ## 
-##            [,1]      [,2]
-## [1,] 0.21224108 0.3154456
-## [2,] 0.02320423 0.3019198</code></pre>
+##            [,1]       [,2]
+## [1,] 0.06484822 0.09040716
+## [2,] 0.32499253 0.13201052</code></pre>
 <p>The print method shows the first table in the list.<br />
-The tables are stored as a matrix as can be seen by using the <code>dim()</code> function. Accessing particular rows of this matrix return the appropriate tables:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>tab[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">5</span>),]</span></code></pre></div>
+The tables are stored as a matrix as can be seen by using the
+<code>dim()</code> function. Accessing particular rows of this matrix
+return the appropriate tables:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tab[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">5</span>),]</span></code></pre></div>
 <pre><code>## Group of 3 numeric tables of dimension 2x2x2
 ## First entry:
 ## , , 1
 ## 
 ##            [,1]       [,2]
-## [1,] 0.06882546 0.05337011
-## [2,] 0.01401081 0.01098293
+## [1,] 0.07725706 0.05919536
+## [2,] 0.02177280 0.22951635
 ## 
 ## , , 2
 ## 
-##            [,1]      [,2]
-## [1,] 0.21224108 0.3154456
-## [2,] 0.02320423 0.3019198</code></pre>
-<p>However we can also specific elements of the tables using their co-ordinates, and (optionally) leaving the first entry blank:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>tab[,<span class="dv">1</span>,<span class="dv">1</span>,]</span></code></pre></div>
+##            [,1]       [,2]
+## [1,] 0.06484822 0.09040716
+## [2,] 0.32499253 0.13201052</code></pre>
+<p>However we can also specific elements of the tables using their
+co-ordinates, and (optionally) leaving the first entry blank:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tab[,<span class="dv">1</span>,<span class="dv">1</span>,]</span></code></pre></div>
 <pre><code>## Group of 10 numeric tables of dimension 2
 ## First entry:
-## [1] 0.06882546 0.21224108</code></pre>
-<p>The <code>drop</code> argument can be set to <code>FALSE</code> if dimensions of length 1 should be retained:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>tab[,<span class="dv">1</span>,<span class="dv">1</span>,,drop=<span class="ot">FALSE</span>]</span></code></pre></div>
+## [1] 0.07725706 0.06484822</code></pre>
+<p>The <code>drop</code> argument can be set to <code>FALSE</code> if
+dimensions of length 1 should be retained:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>tab[,<span class="dv">1</span>,<span class="dv">1</span>,,drop<span class="ot">=</span><span class="cn">FALSE</span>]</span></code></pre></div>
 <pre><code>## Group of 10 numeric tables of dimension 1x1x2
 ## First entry:
 ## , , 1
 ## 
 ##            [,1]
-## [1,] 0.06882546
+## [1,] 0.07725706
 ## 
 ## , , 2
 ## 
-##           [,1]
-## [1,] 0.2122411</code></pre>
+##            [,1]
+## [1,] 0.06484822</code></pre>
 <div id="basic-manipulations" class="section level2">
 <h2>Basic Manipulations</h2>
-<p>Some basic operations are predefined, such as taking the margin of each table, or calculating a conditional distribution.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">margin</span>(tab, <span class="dv">2</span><span class="op">:</span><span class="dv">3</span>)         <span class="co"># margin of second and third dimensions</span></span></code></pre></div>
+<p>Some basic operations are predefined, such as taking the margin of
+each table, or calculating a conditional distribution.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">margin</span>(tab, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>)         <span class="co"># margin of second and third dimensions</span></span></code></pre></div>
 <pre><code>## Group of 10 numeric tables of dimension 2x2
 ## First entry:
 ##            [,1]      [,2]
-## [1,] 0.08283627 0.2354453
-## [2,] 0.06435303 0.6173654</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">conditional</span>(tab, <span class="dv">2</span>, <span class="dv">1</span>)  <span class="co"># second dimension conditional on first</span></span></code></pre></div>
+## [1,] 0.09902986 0.3898408
+## [2,] 0.28871171 0.2224177</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">conditional</span>(tab, <span class="dv">2</span>, <span class="dv">1</span>)  <span class="co"># second dimension conditional on first</span></span></code></pre></div>
 <pre><code>## Group of 10 numeric tables of dimension 2x2
 ## First entry:
 ##           [,1]      [,2]
-## [1,] 0.4324884 0.1062929
-## [2,] 0.5675116 0.8937071</code></pre>
-<p>These can also be applied on an ordinary numerical array with the expected effect. It can also be useful to calcuate conditional or other functions but retain the placement of values in the same point as the original table. For this purpose the functions <code>margin2()</code> and <code>conditional2()</code> are available.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>                         <span class="co"># as above but sequence of cells</span></span>
-<span id="cb15-2"><a href="#cb15-2"></a><span class="kw">margin2</span>(tab, <span class="dv">2</span><span class="op">:</span><span class="dv">3</span>)        <span class="co"># in table is retained</span></span></code></pre></div>
+## [1,] 0.4871494 0.4895795
+## [2,] 0.5128506 0.5104205</code></pre>
+<p>These can also be applied on an ordinary numerical array with the
+expected effect. It can also be useful to calcuate conditional or other
+functions but retain the placement of values in the same point as the
+original table. For this purpose the functions <code>margin2()</code>
+and <code>conditional2()</code> are available.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>                         <span class="co"># as above but sequence of cells</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">margin2</span>(tab, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>)        <span class="co"># in table is retained</span></span></code></pre></div>
 <pre><code>## Group of 10 numeric tables of dimension 2x2x2
 ## First entry:
 ## , , 1
 ## 
-##            [,1]       [,2]
-## [1,] 0.08283627 0.06435303
-## [2,] 0.08283627 0.06435303
+##            [,1]      [,2]
+## [1,] 0.09902986 0.2887117
+## [2,] 0.09902986 0.2887117
 ## 
 ## , , 2
 ## 
 ##           [,1]      [,2]
-## [1,] 0.2354453 0.6173654
-## [2,] 0.2354453 0.6173654</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">conditional2</span>(tab, <span class="dv">2</span>, <span class="dv">1</span>)  </span></code></pre></div>
+## [1,] 0.3898408 0.2224177
+## [2,] 0.3898408 0.2224177</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">conditional2</span>(tab, <span class="dv">2</span>, <span class="dv">1</span>)  </span></code></pre></div>
 <pre><code>## Group of 10 numeric tables of dimension 2x2x2
 ## First entry:
 ## , , 1
 ## 
 ##           [,1]      [,2]
-## [1,] 0.4324884 0.5675116
-## [2,] 0.1062929 0.8937071
+## [1,] 0.4871494 0.5128506
+## [2,] 0.4895795 0.5104205
 ## 
 ## , , 2
 ## 
 ##           [,1]      [,2]
-## [1,] 0.4324884 0.5675116
-## [2,] 0.1062929 0.8937071</code></pre>
+## [1,] 0.4871494 0.5128506
+## [2,] 0.4895795 0.5104205</code></pre>
 </div>
 <div id="functions-of-distributions" class="section level2">
 <h2>Functions of Distributions</h2>
 <p>Some built-in functions are available. For example:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>tab2 &lt;-<span class="st"> </span><span class="kw">rprobMat</span>(<span class="dv">10</span>,<span class="dv">2</span>,<span class="dv">3</span>)</span>
-<span id="cb19-2"><a href="#cb19-2"></a><span class="kw">kl</span>(tab, tab2)   <span class="co"># pairwise Kullback-Leibler divergence</span></span></code></pre></div>
-<pre><code>##  [1] 1.7876734 0.8878977 0.9273411 1.0505738 0.9644997 1.5125273 1.4185864
-##  [8] 0.9040103 0.3541266 1.3874266</code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>                       <span class="co"># mutual information between</span></span>
-<span id="cb21-2"><a href="#cb21-2"></a><span class="kw">mutualInf</span>(tab, <span class="dv">2</span>, <span class="dv">3</span>)   <span class="co"># second and third dimensions</span></span></code></pre></div>
-<pre><code>##  [1] 0.0222188296 0.0006586847 0.1097037171 0.0120777172 0.0901299457
-##  [6] 0.0374731115 0.0141781905 0.0002883694 0.0016497155 0.0001017643</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">mutualInf</span>(tab, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dt">cond=</span><span class="dv">1</span>)   <span class="co"># conditional mutual information</span></span></code></pre></div>
-<pre><code>##  [1] 0.0230257978 0.0080745807 0.1440390623 0.2507592964 0.1161879554
-##  [6] 0.0042213826 0.0428370801 0.0004402263 0.0143184393 0.0113316165</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>tab2 <span class="ot">&lt;-</span> <span class="fu">rprobMat</span>(<span class="dv">10</span>,<span class="dv">2</span>,<span class="dv">3</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kl</span>(tab, tab2)   <span class="co"># pairwise Kullback-Leibler divergence</span></span></code></pre></div>
+<pre><code>##  [1] 0.3206696 2.0881026 0.5984369 0.6217406 0.3184743 0.6398260 0.4474624
+##  [8] 0.9102776 0.5334531 0.5523857</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>                       <span class="co"># mutual information between</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mutualInf</span>(tab, <span class="dv">2</span>, <span class="dv">3</span>)   <span class="co"># second and third dimensions</span></span></code></pre></div>
+<pre><code>##  [1] 7.138777e-02 2.609915e-01 2.188817e-02 3.778951e-05 1.541626e-01
+##  [6] 7.623859e-05 1.416532e-03 9.111831e-02 1.960985e-01 1.466368e-02</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutualInf</span>(tab, <span class="dv">2</span>, <span class="dv">3</span>, <span class="at">cond=</span><span class="dv">1</span>)   <span class="co"># conditional mutual information</span></span></code></pre></div>
+<pre><code>##  [1] 0.145239000 0.282884289 0.056902260 0.005690229 0.187849166 0.025032492
+##  [7] 0.103936739 0.061295824 0.210644244 0.049432652</code></pre>
 <!-- ## Graphical Models -->
 <!-- Using the `MixedGraphs` package, one can generate  -->
 <!-- distributions satisfying the Markov properties of -->

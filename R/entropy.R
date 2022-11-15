@@ -152,7 +152,10 @@ kl.default <- function(x, y, ...) {
 ##' @export 
 kl.tables <- function(x, y, ...) {
   
-  if (!("tables" %in% class(y))) y <- as_tables(y) 
+  if (!("tables" %in% class(y))) y <- as_tables(y, tdim=tdim(x)) 
+  
+  if ((length(tdim(x)) != length(tdim(y))) || 
+      (!all(tdim(x) == tdim(y)))) stop("table dimensions not equal")
 
   nx = ntables(x)
   ny = ntables(y)
@@ -168,5 +171,59 @@ kl.tables <- function(x, y, ...) {
   tmp <- x*log(x/y)
   tmp[is.nan(tmp)] = 0
   rowSums(tmp)
+}
+
+
+##' Multiinformation
+##' 
+##' Get the multiinformation for a discrete distribution
+##' 
+##' @param x vectors (of probabilities)
+##' @param ... other arguments to methods
+##' 
+##' @return a numberic value, vector or matrix of required multiinformation.
+##' 
+##' @export
+multiInf <- function(x, ...) {
+  UseMethod("multiInf")
+}
+
+##' @describeIn multiInf Default method for vectors and arrays
+##' @param margin margin to find multiinformation for
+##' @method multiInf default
+##' @export
+multiInf.default <- function(x, margin=NULL, ...) {
+  
+  if (!is.null(margin)) {
+    x <- margin(x, margin)
+  }
+  
+  if (is.null(dim(x))) return(0)
+  
+  out <- x
+  out[] <- 1
+  
+  for (i in seq_along(dim(x))) {
+    out <- out*margin2(x, i)
+  }
+  
+  entropy(x/out)
+}
+
+##' @describeIn multiInf Method for \code{tables} object
+##' @method multiInf tables
+##' @export 
+multiInf.tables <- function(x, margin=NULL, ...) {
+  
+  if (!is.null(margin)) x <- margin(x, margin)
+  
+  out <- x
+  out[] <- 1
+  
+  for (i in seq_along(tdim(x))) {
+    out <- out*margin2(x, i)
+  }
+  
+  entropy(x/out)
 }
 
