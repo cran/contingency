@@ -1,4 +1,4 @@
-1609390329ec318b210b90a9aa2e130c *DESCRIPTION
+f4624ba587c4b61cb1f648411dc54a94 *DESCRIPTION
 f1ffc94adbcc462ec22fad60cbd0979f *NAMESPACE
 5455b155b4ca94e55ee063b15603aafe *R/capply.R
 6f09a038b47a25975a58cf5b1ecd7dc2 *R/condinep.R
@@ -9,12 +9,12 @@ a3e92a0f5c828fbbd3d22148a53bcf65 *R/entropy.R
 caa611f8965e432bc7ab11d742305d62 *R/other/ivbounds.R
 b34efe6451122a097a1525f4cb40b3b7 *R/perm_dim.R
 1c4e4bda967148f53588b6087a2acea7 *R/probMat.R
-102ec9fb6e210be2b3c2fc92a79a7485 *R/zzz.R
+a77a4133037e2d63c03e15a329b4abe0 *R/zzz.R
 7ac701fabab2dc47e066f92c5819428d *README.md
-15d29637dcc9c8c8696db0acc0a829bc *build/vignette.rds
+c746ac39e2dcbda7acf26f3d617763c1 *build/vignette.rds
 5fb40da3082e3f534e90c91ef99636af *inst/doc/tables.R
 be387fbe684e2b09e9dc4d43ffdaf569 *inst/doc/tables.Rmd
-63374c9becd170109d3c899d78b66aa3 *inst/doc/tables.html
+f3f17da7d4730aea020f7f55c8878a1a *inst/doc/tables.html
 115e1d14ee115fe862aeb6f4817b5b10 *man/aperm.tables.Rd
 8f793a6e9c816a85105550aa90b922c4 *man/as.array.tables.Rd
 42455a944ebde5e60354834a37a87e9a *man/as.matrix.tables.Rd
